@@ -5,31 +5,41 @@ class ProductoModel:
     
     def __init__(self):
         self.db = Conexion()
-        self.cursor = self.db.cursor
+        self.cursor = self.db.cursor()
 
     def CargarProductos(self):
         sql = 'SELECT * FROM Producto'
         self.cursor.execute(sql)
         return self.cursor.fetchall()
     
-    def BuscarProducto(self, Id_producto: int):
-        sql = 'SELECT * FROM Producto WHERE Id_Producto = '
-        self.cursor.execute(sql,(Id_producto,))
+    def BuscarProducto(self, Idproducto: int):
+        sql = 'SELECT * FROM Producto WHERE Id_Producto = ?'
+        self.cursor.execute(sql,(Idproducto,))
         return self.cursor.fetchone()
-    
         
-    def EliminarProducto(self, Id_producto: int):
-        sql = 'DELETE * FROM Producto WHERE Id_Producto = ?'
-        self.cursor.execute(sql,(Id_producto,))
-        self.db.Commit()
+    def EliminarProducto(self, Idproducto: int):
+        sql = 'DELETE FROM Producto WHERE Id_Producto = ?'
+        self.cursor.execute(sql,(Idproducto,))
+        self.db.commit()
     
     def GuardarProducto(self, producto: Producto):
-        sql = 'INSERT INTO Producto (Nombre, Precio, Stock) VALUES (?,?,?)'
-        self.cursor.execute(sql, (producto.nombre, producto.precio, producto.stock))
-        self.db.Commit()
+        sql = 'INSERT INTO Producto (Nombre, Descripcion, Stock, Precio, IdCategoria, IdProveedor) VALUES (?, ?, ?, ?, ?, ?)'
+        self.cursor.execute(sql, (producto.nombre,
+        producto.descripcion,
+        producto.stock,
+        producto.precio,
+        producto.idCategoria,
+        producto.idProveedor))
+        self.db.commit()
     
-    def ModificarProducto(self, producto: Producto, Id_producto: int):
-        sql = 'UPDATE FROM Producto SET Nombre = ?, Precio = ?, Stock = ? WHERE Id_Producto = -? '
-        self.cursor.execute(sql, (producto.nombre, producto.precio, producto.stock, Id_producto))
-        self.db.Commit()
-    
+    def ModificarProducto(self, producto: Producto, Idproducto: int):
+        sql = 'UPDATE Producto SET Nombre = ?, Descripcion = ?, Stock = ?, Precio = ?, IdCategoria = ?, IdProveedor = ? WHERE IdProducto = ? '
+        self.cursor.execute(sql, (producto.nombre,
+        producto.descripcion,
+        producto.stock,
+        producto.precio,
+        producto.idCategoria,
+        producto.idProveedor,
+        Idproducto))
+        self.db.commit()
+        
