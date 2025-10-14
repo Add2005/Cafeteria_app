@@ -8,10 +8,10 @@ ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("green")
 
 # Theme colors (cafeteria / tierra)
-COLOR_PRIMARY = "#5D4037"  # Marron Oscuro (Background principal)
-COLOR_SECONDARY = "#8D6E63"  # Marron Medio (Elementos interactivos)
-COLOR_TEXT = "#D7CCC8"      # Crema/Beige Claro (Texto)
-COLOR_BG_CARD = "#4E342E"    # Marron Rojizo (Fondo de tarjetas/paneles)
+COLOR_PRIMARY = "#202332" 
+COLOR_SECONDARY = "#323852"  
+COLOR_TEXT = "#FFFFFF"      
+COLOR_BG_CARD = "#292931"   
 
 # importar las vistas modulares
 from View.menuView import crear_vista_menu
@@ -23,7 +23,7 @@ class DashboardView:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Cafeteria - Dashboard")
-        self.root.geometry("1200x700")
+        self.root.geometry("1000x650")
         self.root.resizable(False, False)
 
         # configuracion de la cuadricula, el sidebar y el contenedor de vistas
@@ -46,7 +46,7 @@ class DashboardView:
         if Image is not None and CTkImage is not None:
             try:
                 img_path = "imgs/menu.png"
-                pil_img = Image.open(img_path).resize((28, 28))
+                pil_img = Image.open(img_path).resize((30, 30))
                 menu_img = CTkImage(light_image=pil_img, dark_image=pil_img, size=(28, 28))
             except Exception:
                 menu_img = None
@@ -66,7 +66,7 @@ class DashboardView:
         if Image is not None and CTkImage is not None:
             try:
                 img_path = "imgs/historial.png"
-                pil_img = Image.open(img_path).resize((28, 28))
+                pil_img = Image.open(img_path).resize((30, 30))
                 histotial_img = CTkImage(light_image=pil_img, dark_image=pil_img, size=(28, 28))
             except Exception:
                 histotial_img = None
@@ -86,7 +86,7 @@ class DashboardView:
         if Image is not None and CTkImage is not None:
             try:
                 img_path = "imgs/reportes.png"
-                pil_img = Image.open(img_path).resize((28, 28))
+                pil_img = Image.open(img_path).resize((30, 30))
                 reports_img = CTkImage(light_image=pil_img, dark_image=pil_img, size=(28, 28))
             except Exception:
                 reports_img = None
