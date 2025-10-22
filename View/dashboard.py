@@ -105,11 +105,11 @@ class DashboardView:
 
         # separador
         self.navigation_frame.grid_rowconfigure(4, weight=1)
-
+            
         # Icono de configuracion
         self.nav_button_settings = ctk.CTkButton(self.navigation_frame, text="⚙️", width=40, height=40,
                                                  fg_color=COLOR_BG_CARD, hover_color=COLOR_SECONDARY,
-                                                 command=self._dummy)
+                                                command=self.cerrar)
         self.nav_button_settings.grid(row=5, column=0, pady=12)
 
         # contendor principal
@@ -137,9 +137,11 @@ class DashboardView:
         # empezar mostrando el menu
         self.select_frame_by_name("menu")
 
-    def _dummy(self):
-        messagebox.showinfo("Info", "Ajustes - (no implementado)")
-
+    def cerrar(self):
+        respuesta = messagebox.askokcancel("Salir", "Estas seguro que desas salir?")
+        if respuesta:
+            self.root.destroy()
+            
     def select_frame_by_name(self, name: str):
         """muestra la vista solicitada al obtener el frame y elevarlo en el contendor"""
         def set_active(btn):
