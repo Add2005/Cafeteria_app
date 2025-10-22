@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from tkinter import ttk  # Usamos ttk para el Treeview que se parece a una tabla
-from Controller.orden_Controller import obtener_historial_ordenes
+#from Controller.Venta_Controller import obtener_historial_ordenes
 
 # ------ REGISTRO/HISTORIAL DE VENTAS ------
 def crear_vista_historial(parent_frame, paleta):
@@ -106,14 +106,6 @@ def crear_vista_historial(parent_frame, paleta):
     tree.column("delivery", width=100, anchor='center')
     tree.column("total", width=100, anchor='e') # e = east (derecha para números)
 
-    # # Datos de ejemplo (simulando los datos de la imagen adjunta)
-    # data = [
-    #     ("1001", "27 Oct 2023", "John Smith", "Pagado", "Entregado", "$0.50"),
-    #     ("1002", "27 Oct 2023", "Jane Doe", "Pendiente", "Recoger", "$12.99"),
-    #     ("1003", "28 Oct 2023", "Peter Parker", "Pagado", "A Domicilio", "$8.75"),
-    # ]
-
-    # Obtenemos los datos reales del controlador
     try:
         data = obtener_historial_ordenes()  # Suponiendo que devuelve una lista de tuplas
     except Exception as e:

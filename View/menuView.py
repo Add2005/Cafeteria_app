@@ -1,11 +1,26 @@
 import customtkinter as ctk
+from Controller.producto_Controller import ProductoController 
+from PIL import Image , ImageTk
+#trayendo los datos a el form con el controller
+control = ProductoController()
+#declarando listas para las categorias
+Cafes = list()
+BebidasFrias = list()
+Postres = list()
+for ca in control.ListarCafes():
+    #agregando todos los tipos de cafes a la lista "Cafes"
+    Cafes.append(ca)
+for bebidas in control.ListarBebidasFrias():
+    BebidasFrias.append(bebidas)
+for pst in control.ListarPostres():
+    Postres.append(pst)
+
 
 def crear_vista_menu(parent, colores):
-    """
-    crea y deveulve el frame de la vista 'menu'.
-    parent: widget contenedor donde se colocara el frame
-    colores: dict con claves 'principal', 'secundario', 'texto', 'tarjeta'
-    """
+    # crea y deveulve el frame de la vista 'menu'.
+    # parent: widget contenedor donde se colocara el frame
+    # colores: dict con claves 'principal', 'secundario', 'texto', 'tarjeta'
+
     vista_menu = ctk.CTkFrame(parent, fg_color=colores.get('principal'))
     vista_menu.grid(row=0, column=0, sticky="nsew")
 
@@ -19,7 +34,7 @@ def crear_vista_menu(parent, colores):
                                             fg_color=colores.get('principal')    ) 
     marco_productos.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-# Derecha: resumen de orden (placeholder)
+    # Derecha: resumen de orden (placeholder)
     marco_orden = ctk.CTkFrame(vista_menu, fg_color=colores.get('tarjeta'))
     marco_orden.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
     ctk.CTkLabel(marco_orden, text="Confirmacion de Orden", text_color=colores.get('texto'), font=ctk.CTkFont(size=16, weight="bold")).pack(anchor="nw", padx=12, pady=12)
@@ -27,7 +42,6 @@ def crear_vista_menu(parent, colores):
 
 
 # --- BOTONES DE CATEGORIAS ---
-#--------------------------------------------
     categorias_frame = ctk.CTkFrame(marco_productos, fg_color=colores.get('principal')) # ctk.CTkFrame es el contenedor 
     categorias_frame.pack( pady=(10, 5))
 #lista de cat
@@ -62,32 +76,17 @@ def crear_vista_menu(parent, colores):
             )
             boton.pack(side="left", padx=5)
             botones_categoria[cat] = boton
-            
 
-
-
-    # --- MARCO PRODUCTOS ---============================================
+    # --- MARCO PRODUCTOS ------------------------------------------
     productos_frame = ctk.CTkFrame(marco_productos, fg_color=colores.get('principal'))
     productos_frame.pack(fill="both", expand=True)
 
-    # --- DATOS DE LOS PRODUCTOS (INCODE PARA EJEMPLO)--- = productos = {categoria[(titulo, desc, precio)]}
+    # --- DATOS DE LOS PRODUCTOS productos = {categoria[(titulo, desc, precio)]}
     productos = {
-        "Cafes👅": [
-            ("Latte Caramelo ", "El más vendido, suave y dulce.", 4.50),
-            ("Cappuccino Clásico", "Espresso, leche vaporizada y espuma.", 3.80),
-            ("Moka Oscura", "Chocolate intenso y doble shot de espresso.", 5.00),
-            ("Affogato", "Helado de vainilla con shot de espresso.", 5.50)
-        ],
-        "Postres🍑": [
-            ("⁉Tarta de Manzana", "Porción de tarta casera.", 4.00),
-            ("Croissant", "Recién horneado con mantequilla.", 2.50)
-        ],
-        "Bebidas Frías🥶": [
-            ("Cold Brew", "Café infusionado en frío por 12 horas.", 3.50),
-            ("Frappe de Vainilla", "Cremoso y refrescante.", 4.00)
-        ]
+        "Cafes👅": Cafes,
+        "Postres🍑": Postres,
+        "Bebidas Frías🥶": BebidasFrias
     }
-
 
 #mostrar productos con png
     def mostrar_productos(categoria): #muestra los productos de la categoria seleccionada (categoria)
@@ -113,7 +112,7 @@ def crear_vista_menu(parent, colores):
             tarjeta.grid(row=idxy//2, column=idxy%2, padx=10, pady=10, sticky="nsew")
             tarjeta.grid_columnconfigure(0, weight=1)
 
-# Imagen del producto (por ahora un emoji grande)
+            # Imagen del producto (por ahora un emoji grande)
             img_frame = ctk.CTkFrame(
                 tarjeta, 
                 fg_color=colores.get('principal'), 
@@ -123,9 +122,18 @@ def crear_vista_menu(parent, colores):
             img_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
             img_frame.grid_propagate(True) # evitar que el frame cambie de tamaño
             
+            if Image is not None and ctk.CTkImage is not None:
+                try:
+                    ImgProducto = "imgs/reportes.png"
+                    prod_img = Image.open(ImgProducto).resize((30, 30))
+                    ImgProducto = ctk.CTkImage(light_image=prod_img, dark_image=prod_img, size=(80, 80))
+                except Exception:
+                    ImgProducto = None
+
             ctk.CTkLabel(
-                img_frame, 
-                text="🍽️", 
+                img_frame,
+                text="",
+                image= ImgProducto, 
                 font=ctk.CTkFont(size=40)
             ).place(relx=0.5, rely=0.5, anchor="center")
 
@@ -133,7 +141,7 @@ def crear_vista_menu(parent, colores):
             info_frame = ctk.CTkFrame(tarjeta, fg_color="transparent")
             info_frame.grid(row=1, column=0, padx=10, pady=(0,5), sticky="ew")
 
-# Nombre
+            # Nombre
             ctk.CTkLabel(
                 info_frame, 
                 text=nombre, 
@@ -181,8 +189,6 @@ def crear_vista_menu(parent, colores):
         # Hacer que las columnas tengan el mismo tamaño
         productos_grid.grid_columnconfigure(0, weight=1, uniform="col") 
         productos_grid.grid_columnconfigure(1, weight=1, uniform="col")
-#-------------end
-
 
 # SECCIÓN: PANEL DERECHO - CONFIRMACIÓN DE ORDEN
     marco_orden = ctk.CTkFrame(
@@ -194,7 +200,7 @@ def crear_vista_menu(parent, colores):
     marco_orden.grid_rowconfigure(1, weight=1)
     marco_orden.grid_columnconfigure(0, weight=1)
 
-# Título del panel
+    # Título del panel
     header_frame = ctk.CTkFrame(marco_orden, fg_color="transparent")
     header_frame.grid(row=0, column=0, sticky="ew", padx=15, pady=15)
     
@@ -239,18 +245,6 @@ def crear_vista_menu(parent, colores):
         font=ctk.CTkFont(size=16, weight="bold")
     ).pack(anchor="e", pady=2)
 
-
-
-
-
-
-
-
-
-
-
-#----------------- end
-
     #botones de acción lado derecho 
     botones_frame = ctk.CTkFrame(marco_orden, fg_color="transparent")
     botones_frame.grid(row=3, column=0, sticky="ew", padx=15, pady=(0,15))
@@ -278,7 +272,5 @@ def crear_vista_menu(parent, colores):
         font=ctk.CTkFont(size=14, weight="bold"),
         command=lambda: print("Pago confirmado")
     ).pack(fill="x")
-#----------------- end
-
 
     return vista_menu
