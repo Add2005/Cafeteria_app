@@ -1,14 +1,9 @@
-from db import Conexion as cn
-from View.dashboard import run_dashboard
+from Controller.login_controller import LoginController
 
 
 def main():
-    try:
-        cn.Conexion()
-    except Exception as e:
-        print(f"Advertencia: no se pudo inicializar la conexión a BD: {e}")
-
-    run_dashboard()
+    ctrl = LoginController()
+    ctrl.mostrar()
 
 
 if __name__ == "__main__":
