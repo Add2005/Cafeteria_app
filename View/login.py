@@ -16,7 +16,7 @@ class LoginView:
         frame_left.place(x=25, y=15)
         
           #imagen de bg en el frame izqu
-        image = ctk.CTkImage(Image.open("imgs/bg2.jpg"), size=(400, 600))
+        image = ctk.CTkImage(Image.open("imgs/bg.jpg"), size=(400, 600))
         label_image = ctk.CTkLabel(frame_left, image=image, text="")
         label_image.place(x=15, y=10)
         
