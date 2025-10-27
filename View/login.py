@@ -12,25 +12,13 @@ class LoginView:
         self.root.geometry("1000x650")
         self.root.resizable(0,0)
         
-        frame_left = ctk.CTkFrame(self.root, width=450, height=620, corner_radius=10, fg_color="#AF9B5D")
-        frame_left.place(x=10, y=15)
+        frame_left = ctk.CTkFrame(self.root, width=430, height=620, corner_radius=10)
+        frame_left.place(x=25, y=15)
         
-        logo_img = None
-        if Image is not None:
-            try:
-                img_path = "imgs/logo2.png"
-                pil_img = Image.open(img_path).resize((300, 300))
-                logo_img = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(500, 400))
-            except Exception:
-                logo_img = None
-                
-        if logo_img:
-            self.logo_image = logo_img  #guardar referencia en self para evitar que el compilador recoja la imagen
-            logo_label = ctk.CTkLabel(frame_left, image=self.logo_image, text="")
-            logo_label.place(relx=0.5, rely=0.5, anchor="center")
-        else:
-            logo_label = ctk.CTkLabel(frame_left, text="Error al cargar imagen")
-            logo_label.place(relx=0.5, rely=0.3, anchor="center")
+          #imagen de bg en el frame izqu
+        image = ctk.CTkImage(Image.open("imgs/bg2.jpg"), size=(400, 600))
+        label_image = ctk.CTkLabel(frame_left, image=image, text="")
+        label_image.place(x=15, y=10)
         
         frame_login = ctk.CTkFrame(self.root, width=400, height=500, corner_radius=10)
         frame_login.place(relx=0.53, rely=0.5, anchor="w")
