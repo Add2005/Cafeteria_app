@@ -1,7 +1,7 @@
 
 class Venta:
     
-    def __init__(self, id, TotalVenta, FechaHora, IdCliente, IdEmpleado):
+    def __init__(self,  TotalVenta, FechaHora, IdCliente, IdEmpleado, id = None):
         self.id = id
         self.TotalVenta = TotalVenta
         self.FechaHora = FechaHora

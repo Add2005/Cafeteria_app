@@ -14,7 +14,9 @@ class ProveedorModel:
     
     def GuardarProveedor(self, proveedor: Proveedor):
         sql = 'INSERT INTO Proveedor (Nombre, Correo, Telefono) VALUES (?,?,?)'
-        self.cursor.execute(sql,(proveedor.nombre, proveedor.correo, proveedor.telefono))
+        self.cursor.execute(sql,(proveedor.nombre, 
+                                 proveedor.correo, 
+                                 proveedor.telefono))
     
     def EliminarProveedor(self, id):
         sql = 'DELETE * FROM Proveedor WHERE IdProveedor = ?'
@@ -22,7 +24,10 @@ class ProveedorModel:
         
     def ModificarProveedor(self, proveedor:Proveedor, id):
         sql = 'UPDATE FROM Proveedor SET Nombre = ?, Correo = ?, Telefono = ? WHERE IdProveedor = ? '
-        self.cursor.execute(sql,(proveedor.nombre, proveedor.correo, proveedor.telefono, id))
+        self.cursor.execute(sql,(proveedor.nombre, 
+                                 proveedor.correo, 
+                                 proveedor.telefono, 
+                                 id))
         
     def BuscarProvedor(self, idproveedor):
         sql = 'SELECT * FROM Proveedor WHERE IdProveedor = ?'

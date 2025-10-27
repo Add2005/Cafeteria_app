@@ -1,8 +1,8 @@
-from db import Conexion as cn
-from View.dashboard import run_dashboard
+from Controller.login_controller import LoginController
 
 def main():
-    run_dashboard()
+    ctrl = LoginController()
+    ctrl.mostrar()
 
 if __name__ == "__main__":
     main()
