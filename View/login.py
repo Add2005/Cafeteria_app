@@ -30,11 +30,20 @@ class LoginView:
         
         label_titulo = ctk.CTkLabel(frame_login, text="Iniciar Sesion", font=ctk.CTkFont(size=24, weight="bold"))
         label_titulo.pack(pady=(40, 20))
+        
+        #iconos de usuario y contraseña
+        icon_usuario = ctk.CTkImage(Image.open("imgs/usr.png").resize((20, 20)))
+        icon_contra = ctk.CTkImage(Image.open("imgs/psw.png").resize((20,20)))
+        
+        label_icon_usuario = ctk.CTkLabel(frame_login, image=icon_usuario, text="")
+        label_icon_usuario.place(y=155, x=20)
+        label_icon_contra = ctk.CTkLabel(frame_login, image=icon_contra, text="")
+        label_icon_contra.place(y=225, x=20)
 
         #Entradas como atributos para que los handlers puedan acceder a ellas
-        self.entry_usuario = ctk.CTkEntry(frame_login, placeholder_text="Usuario", width=300, height=40)
+        self.entry_usuario = ctk.CTkEntry(frame_login, placeholder_text="Usuario", width=275, height=40)
         self.entry_usuario.place(y=150, x=50)
-        self.entry_contra = ctk.CTkEntry(frame_login, placeholder_text="Contraseña", width=300, height=40, show="*")
+        self.entry_contra = ctk.CTkEntry(frame_login, placeholder_text="Contraseña", width=275, height=40, show="*")
         self.entry_contra.place(y=220, x=50)
 
         btn_registrarse = ctk.CTkButton(frame_login, text="Registrarse", width=100, height=30)
