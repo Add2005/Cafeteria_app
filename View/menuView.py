@@ -6,7 +6,7 @@ control = ProductoController()
 #declarando listas para las categorias
 Cafes = list()
 BebidasFrias = list()
-Postres = list()
+Postres = list() 
 for ca in control.ListarCafes():
     #agregando todos los tipos de cafes a la lista "Cafes"
     Cafes.append(ca)
@@ -37,7 +37,8 @@ def crear_vista_menu(parent, colores):
     # Derecha: resumen de orden (placeholder)
     marco_orden = ctk.CTkFrame(vista_menu, fg_color=colores.get('tarjeta'))
     marco_orden.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
-    ctk.CTkLabel(marco_orden, text="Confirmacion de Orden", text_color=colores.get('texto'), font=ctk.CTkFont(size=16, weight="bold")).pack(anchor="nw", padx=12, pady=12)
+    ctk.CTkLabel(marco_orden, text="Confirmacion de Orden", text_color=colores.get('texto'), 
+                 font=ctk.CTkFont(size=16, weight="bold")).pack(anchor="nw", padx=12, pady=12)
 
 
 
@@ -174,7 +175,7 @@ def crear_vista_menu(parent, colores):
             ).grid(row=0, column=0, sticky="w")
 
             # Botón añadir (por ahora solo visual)
-            ctk.CTkButton(
+            Addbutton = ctk.CTkButton(
                 bottom_frame, 
                 text="Añadir", 
                 width=80, 
@@ -184,7 +185,8 @@ def crear_vista_menu(parent, colores):
                 hover_color="#d364ff",
                 font=ctk.CTkFont(size=12, weight="bold"),
                 corner_radius=8
-            ).grid(row=0, column=1, sticky="e")
+            )
+            Addbutton.grid(row=0, column=1, sticky="e")
 
         # Hacer que las columnas tengan el mismo tamaño
         productos_grid.grid_columnconfigure(0, weight=1, uniform="col") 
@@ -204,12 +206,14 @@ def crear_vista_menu(parent, colores):
     header_frame = ctk.CTkFrame(marco_orden, fg_color="transparent")
     header_frame.grid(row=0, column=0, sticky="ew", padx=15, pady=15)
     
-    ctk.CTkLabel(
+    
+    Lbl_confirmarOrden = ctk.CTkLabel(
         header_frame, 
         text="Confirmación de Orden", 
         text_color=colores.get('texto'), 
         font=ctk.CTkFont(size=18, weight="bold")
-    ).pack(anchor="w")
+    )
+    Lbl_confirmarOrden.pack(anchor="w")
 
     # Área para mostrar items (vacía)
     items_scroll = ctk.CTkScrollableFrame(
@@ -250,7 +254,7 @@ def crear_vista_menu(parent, colores):
     botones_frame.grid(row=3, column=0, sticky="ew", padx=15, pady=(0,15))
     
     # Botón limpiar
-    ctk.CTkButton(
+    cleanbutton =ctk.CTkButton(
         botones_frame,
         text="Descartar Orden",
         fg_color= colores.get('secundario'),
@@ -259,10 +263,109 @@ def crear_vista_menu(parent, colores):
         font=ctk.CTkFont(size=14, weight="bold"),
         command=lambda: print("Orden descartada"),
         height=40
-    ).pack(fill="x", pady=(0,8))
+    )
+    cleanbutton.pack(fill="x", pady=(0,8))
+
+#cambiar .pack por .place para que se veya aestetik
+#agregar nombre cliente nose donde pero aja👍🏿
+    def WindowPago():
+        # Crear la window emergent
+        window_pago = ctk.CTkToplevel(vista_menu)
+        window_pago.title("Confirmar Pago")
+        window_pago.geometry("600x800")
+        window_pago.lift() #trae hacia delante
+        window_pago.focus_force() # forces focus 
+        window_pago.grab_set()  # bloquea la main window principal
+        window_pago.resizable(False, True)
+
+         # Encabezado
+        headerPagos = ctk.CTkLabel(
+            window_pago,
+            text="Payment Confirmacion\nRevieu your order and select payment method",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color=colores.get('texto'),
+            justify="center"
+        )
+        headerPagos.pack(pady=(20, 10))
+
+                # Marco de items
+        marco_items = ctk.CTkScrollableFrame(
+            window_pago,
+            fg_color=colores.get('tarjeta'),
+            label_text="Ordered Items"
+        )
+        marco_items.pack(fill="both", expand=True, padx=20, pady=10)
+        
+
+        # raddiot button payment method
+        paymentFrame = ctk.CTkFrame(window_pago, fg_color=colores.get('tarjeta'), width= 100, height=100)
+        paymentFrame.pack(padx=20, pady=5) #fill x deleted
+        
+
+        metodo_pago = ctk.StringVar(value="Cash")
+        ctk.CTkRadioButton(paymentFrame, text="Cash 🏳️‍⚧️ ", variable=metodo_pago, value="Cash").pack(anchor="w", padx=10, pady=5)
+        ctk.CTkRadioButton(paymentFrame, text="Card 💳", variable=metodo_pago, value="Card").pack(anchor="w", padx=10, pady=5)
+
+        
+        # --- Totales ---
+        total_frame = ctk.CTkFrame(window_pago, fg_color=colores.get('tarjeta'), width= 120, height=100)
+        total_frame.pack(padx=20, pady=(20, 20))
+
+        ctk.CTkLabel(total_frame, text="Total a pagar:", font=ctk.CTkFont(size=14, weight="bold")).grid(row=0, column=0, sticky="w", pady=5)
+        lbl_total = ctk.CTkLabel(total_frame, text="$0.00", font=ctk.CTkFont(size=14))
+        lbl_total.grid(row=0, column=1, sticky="e", pady=5)
+
+        ctk.CTkLabel(total_frame, text="Total recibido:", font=ctk.CTkFont(size=14, weight="bold")).grid(row=1, column=0, sticky="w", pady=5)
+        entry_recibido = ctk.CTkEntry(total_frame, placeholder_text="Recibido", width=100)
+        entry_recibido.grid(row=1, column=1, sticky="e", pady=5)
+
+        ctk.CTkLabel(total_frame, text="Vuelto a dar:", font=ctk.CTkFont(size=14, weight="bold")).grid(row=2, column=0, sticky="w", pady=5)
+        lbl_vuelto = ctk.CTkLabel(total_frame, text="$0.00", font=ctk.CTkFont(size=14))
+        lbl_vuelto.grid(row=2, column=1, sticky="e", pady=5)
+
+    #lbl
+        lbl_mainpago = ctk.CTkLabel(
+            window_pago,
+            text="¿Deseas confirmar el pago?",
+            font=ctk.CTkFont(size=16, weight="bold") #ctk.ctkfont
+        )
+        lbl_mainpago.pack(pady=20)
+
+        # Crear marco para los botones DENTRO del Toplevel
+        botones_pagos = ctk.CTkFrame(window_pago)
+        botones_pagos.pack(pady=10)
+
+        # Botón confirmar
+        btn_pagoConfirmar = ctk.CTkButton(
+            botones_pagos,
+            text="Sí, confirmar",
+            fg_color=colores.get('secundario'),
+            hover_color=colores.get('principal'),
+            text_color=colores.get('texto'),
+            command=lambda: confirmar_pago(window_pago) 
+        )
+        btn_pagoConfirmar.pack(side="left", padx=10)
+
+
+        #fun confirmar
+        def confirmar_pago(window_pago):
+            print("Pago confirmado 🧼")
+            window_pago.destroy()  # Cierra el TopLevel
+
+        # 
+        btn_pagoCancelar = ctk.CTkButton(
+            botones_pagos,
+            text="Cancelar",
+            fg_color="gray",
+            hover_color="white",
+            text_color="white",
+            command=window_pago.destroy
+        )
+        btn_pagoCancelar.pack(side="left", padx=10)
+
 
     # Botón pagar
-    ctk.CTkButton(
+    paybutton = ctk.CTkButton(
         botones_frame,
         text="Confirmar Pago",
         fg_color=colores.get('secundario'),
@@ -270,7 +373,8 @@ def crear_vista_menu(parent, colores):
         text_color=colores.get('texto'),
         height=40,
         font=ctk.CTkFont(size=14, weight="bold"),
-        command=lambda: print("Pago confirmado")
-    ).pack(fill="x")
+        command=WindowPago
+    )
+    paybutton.pack(fill="x")
 
     return vista_menu
