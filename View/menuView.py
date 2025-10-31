@@ -2,25 +2,24 @@ import customtkinter as ctk
 from Controller.producto_Controller import ProductoController
 from PIL import Image
 
-# trayendo los datos a el form con el controller
-control = ProductoController()
-# declarando listas para las categorias
-Cafes = list()
-BebidasFrias = list()
-Postres = list()
-for ca in control.ListarCafes():
-    Cafes.append(ca)
-for bebidas in control.ListarBebidasFrias():
-    BebidasFrias.append(bebidas)
-for pst in control.ListarPostres():
-    Postres.append(pst)
-
 
 def crear_vista_menu(parent, colores):
     """Crea y devuelve el frame de la vista 'menu'.
     parent: widget contenedor donde se colocara el frame
     colores: dict con claves 'principal', 'secundario', 'texto', 'tarjeta'
     """
+    # trayendo los datos a el form con el controller
+    control = ProductoController()
+    # declarando listas para las categorias
+    Cafes = list()
+    BebidasFrias = list()
+    Postres = list()
+    for ca in control.ListarCafes():
+        Cafes.append(ca)
+    for bebidas in control.ListarBebidasFrias():
+        BebidasFrias.append(bebidas)
+    for pst in control.ListarPostres():
+        Postres.append(pst)
 
     vista_menu = ctk.CTkFrame(parent, fg_color=colores.get('principal'))
     vista_menu.grid(row=0, column=0, sticky="nsew")

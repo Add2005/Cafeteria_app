@@ -1,10 +1,37 @@
 import customtkinter as ctk
-from tkinter import ttk  # Usamos ttk para el Treeview que se parece a una tabla
-#from Controller.Venta_Controller import obtener_historial_ordenes
+from tkinter import ttk  
+from Controller.Venta_Controller import VentaController
 
 # ------ REGISTRO/HISTORIAL DE VENTAS ------
 def crear_vista_historial(parent_frame, paleta):
     
+    #llamando el controlador
+    controller = VentaController()
+    historial = controller.HistorialVenta()
+
+    #cargar numero de items desplegados
+    no_items = len(historial)
+
+# esto si esta potente!!!, python deja poner un valor por defecto en el parametro por si no le especificas uno 🤯
+# esto me permitio que la funcion fuera aun mas reutilizable 
+    def CargarHistorial(historial = historial):
+        for item in tree.get_children():
+            tree.delete(item)
+        for NoVenta, Fecha, NombreEmpl, NombreCl, NombrePro, PrecioUni, CantidadOrd, TotalVenta in historial:
+            tree.insert('', 'end', values=(NoVenta, Fecha, NombreEmpl, NombreCl, NombrePro, PrecioUni, CantidadOrd, TotalVenta))
+        info_label.configure(text=f"Mostrando: {len(historial)} items")
+        
+    def FiltrarHistorial(variable):
+        if variable == "Por fecha(mas reciente)":
+            CargarHistorial(controller.Historial_Fecha_DESC())
+        if variable == "Por fecha(menos reciente)":
+            CargarHistorial(controller.Historial_Fecha_ASC())
+        if variable == "Por Total(mayor)":
+            CargarHistorial(controller.Historial_Total_DESC())
+        if variable == "Por Total(menor)":
+            CargarHistorial(controller.Historial_Total_ASC())
+    
+
     # Definición de Colores 
     COLOR_PRIMARY = paleta['principal']
     COLOR_SECONDARY = paleta['secundario']
@@ -12,56 +39,57 @@ def crear_vista_historial(parent_frame, paleta):
     COLOR_BG_CARD = paleta['tarjeta']
 
     #  Frame Principal de la Vista 
-    historial_frame = ctk.CTkFrame(parent_frame, fg_color=COLOR_PRIMARY)
-    historial_frame.grid_columnconfigure(0, weight=1)
-    historial_frame.grid_rowconfigure(3, weight=1) # Fila para la tabla
+    HistorialFrame = ctk.CTkFrame(parent_frame, fg_color=COLOR_PRIMARY)
+    HistorialFrame.grid_columnconfigure(0, weight=1)
+    HistorialFrame.grid_rowconfigure(3, weight=1) # Fila para la tabla
 
     # Título de la Vista 
-    title_label = ctk.CTkLabel(historial_frame, text="Órdenes",
+    lblTitulo = ctk.CTkLabel(HistorialFrame, text="Órdenes",
                                font=ctk.CTkFont(size=24, weight="bold"), text_color=COLOR_TEXT)
-    title_label.grid(row=0, column=0, padx=20, pady=(20, 10), sticky="w")
+    lblTitulo.grid(row=0, column=0, padx=20, pady=(20, 10), sticky="w")
 
     # Barra de Herramientas (Búsqueda y Filtros) 
-    toolbar_frame = ctk.CTkFrame(historial_frame, fg_color="transparent")
-    toolbar_frame.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
-    toolbar_frame.grid_columnconfigure(0, weight=1) # Columna de búsqueda
+    OpcionesFrame = ctk.CTkFrame(HistorialFrame, fg_color="transparent")
+    OpcionesFrame.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
+    OpcionesFrame.grid_columnconfigure(0, weight=1) # Columna de búsqueda
     
     # Campo de Búsqueda
-    search_entry = ctk.CTkEntry(toolbar_frame, placeholder_text="Buscar órdenes...",
+    EtyBuscar = ctk.CTkEntry(OpcionesFrame, placeholder_text="Buscar órdenes...",
                                 fg_color=COLOR_BG_CARD, border_color=COLOR_SECONDARY,
                                 text_color=COLOR_TEXT, width=300)
-    search_entry.grid(row=0, column=0, padx=(0, 10), sticky="w")
+    EtyBuscar.grid(row=0, column=0, padx=(0, 10), sticky="w")
     
     # Botón "Mostrar todas las órdenes"
-    show_all_button = ctk.CTkButton(toolbar_frame, text="Mostrar todas",
+    BtnMostrarTodo = ctk.CTkButton(OpcionesFrame, text="Mostrar todas",
                                     fg_color=COLOR_SECONDARY, hover_color=COLOR_PRIMARY,
-                                    text_color=COLOR_TEXT)
-    show_all_button.grid(row=0, column=1, padx=5, sticky="e")
+                                    text_color=COLOR_TEXT,
+                                    command=CargarHistorial)
+    BtnMostrarTodo.grid(row=0, column=1, padx=5, sticky="e")
 
     # Botón "Ordenar por"
-    sort_by_button = ctk.CTkButton(toolbar_frame, text="Ordenar por fecha 📅",
-                                   fg_color=COLOR_SECONDARY, hover_color=COLOR_PRIMARY,
-                                   text_color=COLOR_TEXT)
-    sort_by_button.grid(row=0, column=2, padx=(5, 0), sticky="e")
+    Cmbx_values = ("Por fecha(mas reciente)","Por fecha(menos reciente)",
+                   "Por Total(mayor)","Por Total(menor)")
+    Cmbx_ordenar_por = ctk.CTkComboBox(OpcionesFrame, fg_color=COLOR_SECONDARY, values=Cmbx_values, 
+                                       text_color=COLOR_TEXT, state="readonly", command=FiltrarHistorial)
+    Cmbx_ordenar_por.grid(row=0, column=2, padx=(5, 0))
+    Cmbx_ordenar_por.set("Por fecha(mas reciente)")
     
     # Esto empuja los botones de filtro/ordenamiento a la derecha
-    toolbar_frame.grid_columnconfigure(1, weight=0)
-    toolbar_frame.grid_columnconfigure(2, weight=0)
+    OpcionesFrame.grid_columnconfigure(1, weight=0)
+    OpcionesFrame.grid_columnconfigure(2, weight=0)
 
     #  3. Información de la Tabla 
-    info_label = ctk.CTkLabel(historial_frame, text="Mostrando: 1 de 1 items",
+    info_label = ctk.CTkLabel(HistorialFrame, text=f"Mostrando: {no_items} de 1 items",
                               font=ctk.CTkFont(size=14), text_color=COLOR_TEXT)
     info_label.grid(row=2, column=0, padx=20, pady=(10, 5), sticky="w")
     
     #  4. Contenedor de la Tabla (Treeview) 
-    table_container = ctk.CTkFrame(historial_frame, fg_color=COLOR_BG_CARD)
+    table_container = ctk.CTkFrame(HistorialFrame, fg_color=COLOR_BG_CARD)
     table_container.grid(row=3, column=0, padx=20, pady=(5, 20), sticky="nsew")
     table_container.grid_rowconfigure(0, weight=1)
     table_container.grid_columnconfigure(0, weight=1)
     
-    # Creamos un Treeview de Tkinter para la tabla ya que CustomTkinter no tiene una tabla nativa.
     # Necesitamos aplicar estilos de ttk para que se vea bien en CTk.
-    
     style = ttk.Style()
     
     # Estilo de la tabla (Treeview) para que se ajuste al tema oscuro
@@ -87,59 +115,42 @@ def crear_vista_historial(parent_frame, paleta):
               foreground=[('selected', COLOR_TEXT)])
 
     
-    columns = ("id", "date", "customer", "payment", "delivery", "total")
+    columns = ("Noventa", "Fecha", "Empleado", "Cliente", "Producto", "PrecioUni", "Cantidad", "TotalCompra")
     tree = ttk.Treeview(table_container, columns=columns, show="headings", style="Custom.Treeview")
 
     # Definición de Encabezados (ajustados a una cafetería)
-    tree.heading("id", text="ID Orden")
-    tree.heading("date", text="Fecha")
-    tree.heading("customer", text="Cliente")
-    tree.heading("payment", text="Pago")
-    tree.heading("delivery", text="Entrega")
-    tree.heading("total", text="Total")
+    tree.heading("Noventa", text="No. Venta")
+    tree.heading("Fecha", text="Fecha")
+    tree.heading("Empleado", text="Empleado")
+    tree.heading("Cliente", text="Cliente")
+    tree.heading("Producto", text="Producto")
+    tree.heading("PrecioUni", text="Precio unitario")
+    tree.heading("Cantidad", text="Cantidad")
+    tree.heading("TotalCompra", text="Total de Compra")
 
     # Definición del ancho de las columnas
-    tree.column("id", width=80, anchor='center')
-    tree.column("date", width=120, anchor='center')
-    tree.column("customer", width=150, anchor='w')
-    tree.column("payment", width=100, anchor='center')
-    tree.column("delivery", width=100, anchor='center')
-    tree.column("total", width=100, anchor='e') # e = east (derecha para números)
-
-    try:
-        data = obtener_historial_ordenes()  # Suponiendo que devuelve una lista de tuplas
-    except Exception as e:
-        data = []
-        info_label.configure(text=f"Error al cargar datos: {e}")   
-
-    for item in data:
-        # Insertar datos en la tabla. Agregamos tags para colorear estados (como en la imagen)
-        tags = ()
-        if "Pagado" in item:
-            tags = ('paid',)
-        elif "Pendiente" in item:
-            tags = ('pending',)
-            
-        tree.insert('', 'end', values=item, tags=tags)
-    info_label.configure(text=f"Mostrando: {len(data)} items")
-    # Colorear las celdas de "Pago" y "Entrega" (requiere un poco más de trabajo con ttk)
-    # Customizamos el estilo de la fila para los tags
-    # Nota: Colorear celdas individuales es complejo en Treeview.
-    # En este ejemplo, solo colorearemos el fondo de la fila por simplicidad,
-    # aunque en el diseño original solo se colorea el campo de estado.
-    # Para simular el diseño original, podrías usar un Treeview y luego etiquetas
-    # o frames encima de él, o usar un widget de tabla más avanzado.
+    tree.column("Noventa", width=30, anchor='center')
+    tree.column("Fecha", width=100, anchor='center')
+    tree.column("Empleado", width=100, anchor='center')
+    tree.column("Cliente", width=150, anchor='w')
+    tree.column("Producto", width=150, anchor='center')
+    tree.column("PrecioUni", width=100, anchor='center')
+    tree.column("Cantidad", width=20, anchor='center') # e = east (derecha para números)
+    tree.column("TotalCompra", width=30, anchor='w')
     
-    # Por ahora, solo coloreamos el texto para simular estados de "Pagado" y "Entregado"
-    # El estilo de la tabla ya se configuró.
+    #CargarDatos
+    CargarHistorial()
 
+    # El estilo de la tabla ya se configuró.
     tree.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
 
-    # Scrollbar vertical (opcional, pero útil si hay muchas órdenes)
+    # # Scrollbar vertical (opcional, pero útil si hay muchas órdenes)
     vsb = ctk.CTkScrollbar(table_container, orientation="vertical", command=tree.yview)
     vsb.grid(row=0, column=1, sticky='ns')
     tree.configure(yscrollcommand=vsb.set)
+    # vsbx = ctk.CTkScrollbar(table_container, orientation="horizontal", command=tree.xview)
+    # vsbx.grid(row=0, column=1, sticky='ew')
+    # tree.configure(yscrollcommand=vsbx.set)
 
-
-    return historial_frame
+    return HistorialFrame
 

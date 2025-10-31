@@ -26,7 +26,6 @@ con = (
 def Conexion():
     try:
         conexion = pyodbc.connect(con)
-        print("Correcto")
         return conexion
     except Exception as ex:
         print(f"Error {ex.args[0]}" )
