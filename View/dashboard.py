@@ -8,10 +8,10 @@ ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
 
 # Theme colors (cafeteria / tierra)
-COLOR_PRIMARY = "#202332" 
-COLOR_SECONDARY = "#323852"  
-COLOR_TEXT = "#FFFFFF"      
-COLOR_BG_CARD = "#292931"   
+COLOR_PRIMARY = "#212121" 
+COLOR_SECONDARY = "#46a877"
+COLOR_TEXT = "#FFFFFF" 
+COLOR_BG_CARD = "#3b3b3b"
 
 # importar las vistas modulares
 from View.menuView import crear_vista_menu
