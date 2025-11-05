@@ -30,6 +30,25 @@ def crear_vista_historial(parent_frame, paleta):
             CargarHistorial(controller.Historial_Total_DESC())
         if variable == "Por Total(menor)":
             CargarHistorial(controller.Historial_Total_ASC())
+            
+    def BuscarDatos(event):
+        query = EtyBuscar.get().lower()
+        for item in tree.get_children():
+            tree.delete(item)
+        for row in historial:
+            # comparamos todos los campos como cadena en minúsculas
+            if (query in str(row[0]).lower() or
+                query in str(row[1]).lower() or
+                query in str(row[2]).lower() or
+                query in str(row[3]).lower() or
+                query in str(row[4]).lower() or
+                query in str(row[5]).lower() or
+                query in str(row[6]).lower() or
+                query in str(row[7]).lower()):
+                # insertar sólo una vez
+                tree.insert('', 'end', values=(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
+    
+        
     
 
     # Definición de Colores 
@@ -58,6 +77,9 @@ def crear_vista_historial(parent_frame, paleta):
                                 fg_color=COLOR_BG_CARD, border_color=COLOR_SECONDARY,
                                 text_color=COLOR_TEXT, width=300)
     EtyBuscar.grid(row=0, column=0, padx=(0, 10), sticky="w")
+    
+    #Bind para la funcion buscar datos
+    EtyBuscar.bind("<KeyRelease>", BuscarDatos)
     
     # Botón "Mostrar todas las órdenes"
     BtnMostrarTodo = ctk.CTkButton(OpcionesFrame, text="Mostrar todas",
