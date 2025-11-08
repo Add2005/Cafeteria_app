@@ -52,7 +52,6 @@ class ProductoModel:
         producto.idProveedor,
         Idproducto))
         self.db.commit()
-    # esto es lo que agregué
 
     def ObtenerCategorias(self):
         sql = 'SELECT IdCategoria, Nombre_Categoria FROM Categoria'

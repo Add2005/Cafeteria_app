@@ -28,7 +28,6 @@ class ProductoController:
         
     def BuscarProducto(self, idproducto):
         return self.model.BuscarProducto(idproducto)
-    # En Producto_Controller.py - agregar estos métodos
 
     def ListarCategorias(self):
         return self.model.ObtenerCategorias()
