@@ -17,6 +17,7 @@ COLOR_BG_CARD = "#3b3b3b"
 from View.menuView import crear_vista_menu
 from View.historialView import crear_vista_historial
 from View.reportesView import crear_vista_reportes
+from View.productoView import crear_vista_producto
 
 class DashboardView:
 
@@ -56,6 +57,7 @@ class DashboardView:
         menu_icon = cargar_icono("menu")
         historial_icon = cargar_icono("historial")
         reportes_icon = cargar_icono("reportes")
+        producto_icon = cargar_icono("modificar")
         
         #botones de navegacion
         self.nav_button_menu = ctk.CTkButton(
@@ -73,6 +75,11 @@ class DashboardView:
             fg_color=COLOR_BG_CARD, hover_color=COLOR_SECONDARY,
             command=lambda: self.select_frame_by_name("reports")
         )
+        self.nav_button_products = ctk.CTkButton(
+            self.navigation_frame, image=producto_icon, text="", width=48, height=48,
+            fg_color=COLOR_BG_CARD, hover_color=COLOR_SECONDARY,
+            command=lambda: self.select_frame_by_name("products")
+            )
         
         
         #Mostrar iconos segun rol
@@ -81,20 +88,23 @@ class DashboardView:
             self.nav_button_menu.grid(row=1, column=0, pady=8, padx=10)
             self.nav_button_orders.grid(row=2, column=0, pady=8, padx=10)
             self.nav_button_reports.grid(row=3, column=0, pady=8, padx=10)
+            self.nav_button_products.grid(row=4, column=0, pady=8, padx=10)
+    
         #El cajero solo vel el dashboard
         elif self.rol == 2:
             self.nav_button_menu.grid(row=2, column=0, pady=8, padx=10)
 
         # Espaciador
-        self.navigation_frame.grid_rowconfigure(4, weight=1)
-            
+        self.navigation_frame.grid_rowconfigure(5, weight=1)
+
         # Icono de configuracion
         self.nav_button_settings = ctk.CTkButton(
             self.navigation_frame, text="⚙️", width=40, height=40,
             fg_color=COLOR_BG_CARD, hover_color=COLOR_SECONDARY,
             command=self.cerrar
         )
-        self.nav_button_settings.grid(row=5, column=0, pady=20)
+        self.nav_button_settings.grid(row=6, column=0, pady=20)
+
 
         # contendor principal
         self.view_container = ctk.CTkFrame(self.root, fg_color=COLOR_PRIMARY)
@@ -117,6 +127,7 @@ class DashboardView:
         self.views['menu'] = crear_vista_menu(self.view_container, paleta)
         self.views['orders'] = crear_vista_historial(self.view_container, paleta)
         self.views['reports'] = crear_vista_reportes(self.view_container, paleta)
+        self.views['products'] = crear_vista_producto(self.view_container, paleta)
 
         # empezar mostrando el menu
         self.select_frame_by_name("menu")
@@ -144,6 +155,7 @@ class DashboardView:
         set_inactive(self.nav_button_menu)
         set_inactive(self.nav_button_orders)
         set_inactive(self.nav_button_reports)
+        set_inactive(self.nav_button_products)
 
         # activar el boton seleccionada
         if name == "menu":
@@ -152,6 +164,9 @@ class DashboardView:
             set_active(self.nav_button_orders)
         elif name == "reports":
             set_active(self.nav_button_reports)
+        elif name == "products":
+            set_active(self.nav_button_products)
+
 
         view = self.views.get(name)
         if view:
