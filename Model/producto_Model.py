@@ -23,12 +23,12 @@ class ProductoModel:
         return self.cursor.fetchall()    
     
     def BuscarProducto(self, Idproducto):
-        sql = 'SELECT * FROM Producto WHERE Id_Producto = ?'
+        sql = 'SELECT * FROM Producto WHERE IdProducto = ?'
         self.cursor.execute(sql,(Idproducto,))
         return self.cursor.fetchone()
         
     def EliminarProducto(self, Idproducto):
-        sql = 'DELETE FROM Producto WHERE Id_Producto = ?'
+        sql = 'DELETE FROM Producto WHERE IdProducto = ?'
         self.cursor.execute(sql,(Idproducto,))
         self.db.commit()
     
@@ -52,4 +52,14 @@ class ProductoModel:
         producto.idProveedor,
         Idproducto))
         self.db.commit()
-        
+    # esto es lo que agregué
+
+    def ObtenerCategorias(self):
+        sql = 'SELECT IdCategoria, Nombre_Categoria FROM Categoria'
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
+
+    def ObtenerProveedores(self):
+        sql = 'SELECT IdProveedor, Nombre FROM Proveedor'
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
