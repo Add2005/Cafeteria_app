@@ -147,7 +147,7 @@ def crear_vista_modificar_producto(TabModificar, paleta, controller, categorias,
             categoria_id = categorias_dict[categoria_nombre]
             proveedor_id = proveedores_dict[proveedor_nombre]
 
-            actualizado = controller.ModificarProducto(id_producto, nombre, descripcion, stock, precio)
+            actualizado = controller.ModificarProducto(id_producto, nombre, descripcion, stock, precio, categoria_id, proveedor_id)
             if actualizado:
                 messagebox.showinfo("Éxito", f"Producto '{nombre}' modificado correctamente.")
                 # Limpiar campos después de modificar
