@@ -26,7 +26,9 @@ class DashboardView:
         self.root = ctk.CTk()
         self.root.title(f"Cafeteria - {self.obtener_nombre_rol(self.user.rol)}")
         self.root.geometry("1000x650")
-        self.root.resizable(False, False)
+        self.root.resizable(1, 1)
+        # Exponer la instancia del Dashboard en el objeto root para que otras vistas puedan acceder a las vistas
+        self.root.dashboard = self
 
         # configuracion de la cuadricula, el sidebar y el contenedor de vistas
         self.root.grid_rowconfigure(0, weight=1)
@@ -109,15 +111,17 @@ class DashboardView:
         # Espaciador
         self.navigation_frame.grid_rowconfigure(5, weight=1)
 
-        # Icono de configuracion
-        self.nav_button_settings = ctk.CTkButton(
-            self.navigation_frame, text="⚙️", width=40, height=40,
-            fg_color=COLOR_BG_CARD, hover_color=COLOR_SECONDARY,
+        #Boton de salir 
+        logout_icon = cargar_icono("salir")
+        if not logout_icon:
+            messagebox.showerror("Error", "No se pudo cargar la imagen de logout.")
+        self.logout_button = ctk.CTkButton(
+            self.navigation_frame, image=logout_icon, text="", width=48, height=48,
+            fg_color=COLOR_BG_CARD, hover_color="#ff4d4d",
             command=self.cerrar
         )
-        self.nav_button_settings.grid(row=6, column=0, pady=20)
-
-
+        self.logout_button.grid(row=6, column=0, pady=20, padx=10)
+        
         # contendor principal
         self.view_container = ctk.CTkFrame(self.root, fg_color=COLOR_PRIMARY)
         self.view_container.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)

@@ -13,16 +13,17 @@ def crear_vista_menu(parent, colores):
     
     # Productos
     control_productos = ProductoController()
-    # declarando listas para las categorias
-    Cafes = list()
-    BebidasFrias = list()
-    Postres = list()
-    for ca in control_productos.ListarCafes():
-        Cafes.append(ca)
-    for bebidas in control_productos.ListarBebidasFrias():
-        BebidasFrias.append(bebidas)
-    for pst in control_productos.ListarPostres():
-        Postres.append(pst)
+
+    def load_products():
+        """Carga las listas de productos desde el controlador y devuelve el dict de categorías."""
+        Cafes = list(control_productos.ListarCafes())
+        BebidasFrias = list(control_productos.ListarBebidasFrias())
+        Postres = list(control_productos.ListarPostres())
+        return {
+            "Cafes👅": Cafes,
+            "Postres🍑": Postres,
+            "Bebidas Frías🥶": BebidasFrias
+        }
 
     vista_menu = ctk.CTkFrame(parent, fg_color=colores.get('principal'))
     vista_menu.grid(row=0, column=0, sticky="nsew")
@@ -198,11 +199,10 @@ def crear_vista_menu(parent, colores):
     def cambiar_categoria(cat):
         mostrar_productos(cat)
 
-    productos = {
-        "Cafes👅": Cafes,
-        "Postres🍑": Postres,
-        "Bebidas Frías🥶": BebidasFrias
-    }
+    # diccionario con productos (se carga inicialmente y puede refrescarse)
+    productos = load_products()
+    # categoría actualmente mostrada (útil para refrescar manteniendo la vista)
+    current_category = "Cafes👅"
 
     # crear contenedor de productos y mostrar por defecto Cafes
     productos_frame = ctk.CTkFrame(marco_productos, fg_color=colores.get('principal'))
@@ -212,6 +212,8 @@ def crear_vista_menu(parent, colores):
         # Limpiar productos anteriores
         for widget in productos_frame.winfo_children():
             widget.destroy()
+        nonlocal current_category
+        current_category = categoria
 
         # Crear grid para organizar productos
         productos_grid = ctk.CTkFrame(productos_frame, fg_color=colores.get('principal'))
@@ -311,6 +313,21 @@ def crear_vista_menu(parent, colores):
         productos_grid.grid_columnconfigure(1, weight=1, uniform="col")
 
     mostrar_productos("Cafes👅")
+
+    # método público para refrescar la lista de productos desde fuera (por ejemplo, tras una modificación)
+    def refresh_products():
+        try:
+            # recargar desde el controlador
+            nuevos = load_products()
+            productos.clear()
+            productos.update(nuevos)
+            # volver a mostrar la categoría actual
+            mostrar_productos(current_category)
+        except Exception as e:
+            print(f"Error refrescando productos: {e}")
+
+    # Exponer la función en el frame para que otras vistas puedan invocarla
+    vista_menu.refresh_products = refresh_products
 
     return vista_menu
         #fun confirmar

@@ -121,7 +121,7 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
     # función para cargar la imagen
     def CargarImagen():
         nonlocal imagen_agregar_path
-        file_path = filedialog.askopenfilename(title="Seleccionar imagen", filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+        file_path = filedialog.askopenfilename(title="Seleccionar imagen", filetypes=[("Image files", "*.png *.jpg *.jpeg")])
         if file_path:
             try:
                 imagen_agregar_path = file_path
@@ -196,6 +196,20 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
             controller.AgregarProducto(nombre, descripcion, precio, stock, categoria_id, proveedor_id, ruta_imagen)
 
             messagebox.showinfo("Éxito", "Producto agregado exitosamente.")
+            
+            # Intentar refrescar la vista del menú principal si está disponible
+            try:
+                root = tab_agregar.winfo_toplevel()
+                dashboard = getattr(root, 'dashboard', None)
+                if dashboard:
+                    menu_frame = dashboard.views.get('menu')
+                    if menu_frame and hasattr(menu_frame, 'refresh_products'):
+                        menu_frame.refresh_products()
+            except Exception as e:
+                    print(f"Advertencia: no se pudo refrescar el menú: {e}")
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo modificar el producto: {e}")
+
 
             # limpiar formulario
             etyNombre.delete(0, 'end')
@@ -210,6 +224,8 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
             lblPreviewThumbnail.configure(image=imagen_default, text="")  # reset preview
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo agregar el producto: {e}")
+    
+            
     
             # botón para agregar producto
     btnAgregarProducto = ctk.CTkButton(FrameAgregarFormulario, text="Agregar producto", fg_color=COLOR_SECONDARY, hover_color=COLOR_PRIMARY, 

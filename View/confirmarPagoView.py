@@ -127,11 +127,26 @@ def WindowPago(vista_menu, colores, calculate_total, order_items):
                 messagebox.showerror("Error","El Producto no es valido")
                 return
             detalle_lista.append((nombre[0], data['cantidad']))
-        
-        print(f"fecha: {fecha_actual} \nIdCliente: {IdCliente} \nIdEmpleado: {IdEmpleado} \nDetallesVenta {detalle_lista} \nTotalVenta: {TotalVenta}")
-        v = Venta(TotalVenta, fecha_actual, IdCliente, IdEmpleado)
-        serviceVenta.AgregarVentaCompleta(v,detalle_lista)
-        
+            
+        #Verificar si el stock es suficiente antes de confirmar la venta
+        stock = controlProducto.BuscarProducto(nombre[0])[3]
+        if stock < data['cantidad']:
+            messagebox.showerror("error", "stock insficiente")
+        else:
+            print(f"fecha: {fecha_actual} \nIdCliente: {IdCliente} \nIdEmpleado: {IdEmpleado} \nDetallesVenta {detalle_lista} \nTotalVenta: {TotalVenta}")
+            v = Venta(TotalVenta, fecha_actual, IdCliente, IdEmpleado)
+            serviceVenta.AgregarVentaCompleta(v,detalle_lista)
+            # Intentar refrescar reportes en el dashboard si está disponible
+            try:
+                root = vista_menu.winfo_toplevel()
+                dashboard = getattr(root, 'dashboard', None)
+                if dashboard:
+                    reports_frame = dashboard.views.get('reports')
+                    if reports_frame and hasattr(reports_frame, 'refresh_reports'):
+                        reports_frame.refresh_reports()
+            except Exception as e:
+                print(f"Advertencia: no se pudo refrescar reportes: {e}")
+
         order_items.clear()
         window_pago.destroy()
 

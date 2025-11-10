@@ -68,10 +68,8 @@ def LoginView():
     entry_contra = ctk.CTkEntry(frame_login, placeholder_text="Contraseña", width=275, height=40, show="*")
     entry_contra.place(y=220, x=50)
 
-    btn_registrarse = ctk.CTkButton(frame_login, text="Registrarse", width=100, height=30)
-    btn_registrarse.place(y=290, x=150)
     boton_entrar = ctk.CTkButton(frame_login, text="Entrar", width=200, height=40, command=entrar)
-    boton_entrar.place(y=340, x=100)        
+    boton_entrar.place(y=300, x=100)        
 
     root.mainloop()
     

@@ -169,6 +169,16 @@ def crear_vista_modificar_producto(TabModificar, paleta, controller, categorias,
                     etyProveedor.set(proveedores_nombres[0])
                 imagen_modificar_path = None
                 lblPreviewThumbnail.configure(image=imagen_default, text="")  # reset preview
+                # Intentar refrescar la vista del menú principal si está disponible
+                try:
+                    root = TabModificar.winfo_toplevel()
+                    dashboard = getattr(root, 'dashboard', None)
+                    if dashboard:
+                        menu_frame = dashboard.views.get('menu')
+                        if menu_frame and hasattr(menu_frame, 'refresh_products'):
+                            menu_frame.refresh_products()
+                except Exception as e:
+                    print(f"Advertencia: no se pudo refrescar el menú: {e}")
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo modificar el producto: {e}")
 
