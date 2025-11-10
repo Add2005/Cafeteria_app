@@ -172,8 +172,6 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
     def AgregarProducto():
         nonlocal imagen_agregar_path # nonlocal para usar la variable de la funcion padre - muy diferente a global
 
-        # ValidarCamposAgregar() devuelve True cuando
-        # todo está bien, False cuando hay un problema (los messagebox se muestran allí).
         valido = ValidarCamposAgregar()
         if not valido:
             return
@@ -191,8 +189,11 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
             proveedor_nombre = etyProveedor.get()
             proveedor_id = proveedores_dict[proveedor_nombre]
 
-            # llamar al controlador para agregar el producto
-            controller.AgregarProducto(nombre, descripcion, precio, stock, categoria_id, proveedor_id, imagen_agregar_path)
+            # Guardar imagen en la carpeta imgs/productos y obtener ruta relativa
+            ruta_imagen = controller.GuardarImagen(imagen_agregar_path)
+
+            # llamar al controlador para agregar el producto con la ruta guardada
+            controller.AgregarProducto(nombre, descripcion, precio, stock, categoria_id, proveedor_id, ruta_imagen)
 
             messagebox.showinfo("Éxito", "Producto agregado exitosamente.")
 
@@ -216,9 +217,9 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
     btnAgregarProducto.pack(fill="x", pady=20)
 
 
- # Retornamos los elementos que necesitemos acceder desde la vista principal
-    return {
-         'contenedor': ContenedorAgregar,
-         'formulario': FrameAgregarFormulario,
-         'imagen_path': imagen_agregar_path
-     }
+# Retornamos los elementos que necesitemos acceder desde la vista principal (no se ocupa)
+#     return {
+#          'contenedor': ContenedorAgregar,
+#          'formulario': FrameAgregarFormulario,
+#          'imagen_path': imagen_agregar_path
+#      }

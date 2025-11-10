@@ -1,7 +1,7 @@
 #Entidad producto
 class Producto:
 
-    def __init__(self,id, nombre, descripcion, stock, precio, idCategoria, idProveedor ):
+    def __init__(self,id, nombre, descripcion, stock, precio, idCategoria, idProveedor, imagen_ruta=None):
         self.id = id
         if precio < 0:
             raise ValueError('El precio no puede ser negativo')
@@ -13,5 +13,6 @@ class Producto:
         self.stock = stock
         self.idCategoria = idCategoria
         self.idProveedor = idProveedor
+        self.imagen_ruta = imagen_ruta
         
         

@@ -131,6 +131,7 @@ def crear_vista_modificar_producto(TabModificar, paleta, controller, categorias,
         return True
 
     def ModificarProducto():
+        nonlocal imagen_modificar_path
         valido = ValidarCamposModificar()
         if not valido:
             return
@@ -147,7 +148,13 @@ def crear_vista_modificar_producto(TabModificar, paleta, controller, categorias,
             categoria_id = categorias_dict[categoria_nombre]
             proveedor_id = proveedores_dict[proveedor_nombre]
 
-            actualizado = controller.ModificarProducto(id_producto, nombre, descripcion, stock, precio, categoria_id, proveedor_id)
+            # Si se seleccionó una nueva imagen, guardarla
+            ruta_imagen = None
+            if imagen_modificar_path:
+                ruta_imagen = controller.GuardarImagen(imagen_modificar_path)
+
+            # Llamar al controlador para modificar (con o sin imagen nueva)
+            actualizado = controller.ModificarProducto(id_producto, nombre, descripcion, stock, precio, categoria_id, proveedor_id, ruta_imagen)
             if actualizado:
                 messagebox.showinfo("Éxito", f"Producto '{nombre}' modificado correctamente.")
                 # Limpiar campos después de modificar
@@ -160,6 +167,8 @@ def crear_vista_modificar_producto(TabModificar, paleta, controller, categorias,
                     etyCategoria.set(categorias_nombres[0])
                 if proveedores_nombres:
                     etyProveedor.set(proveedores_nombres[0])
+                imagen_modificar_path = None
+                lblPreviewThumbnail.configure(image=imagen_default, text="")  # reset preview
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo modificar el producto: {e}")
 

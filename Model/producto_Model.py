@@ -32,25 +32,38 @@ class ProductoModel:
         self.cursor.execute(sql,(Idproducto,))
         self.db.commit()
     
-    def GuardarProducto(self, producto: Producto):
-        sql = 'INSERT INTO Producto (Nombre, Descripcion, Stock, Precio, IdCategoria, IdProveedor) VALUES (?, ?, ?, ?, ?, ?)'
-        self.cursor.execute(sql, (producto.nombre,
-        producto.descripcion,
-        producto.stock,
-        producto.precio,
-        producto.idCategoria,
-        producto.idProveedor))
-        self.db.commit()
-    
-    def ModificarProducto(self, producto: Producto, Idproducto):
-        sql = 'UPDATE Producto SET Nombre = ?, Descripcion = ?, Stock = ?, Precio = ?, IdCategoria = ?, IdProveedor = ? WHERE IdProducto = ? '
+    def GuardarProducto(self, producto: Producto, imagen_path=None):
+        sql = 'INSERT INTO Producto (Nombre, Descripcion, Stock, Precio, IdCategoria, IdProveedor, Imagen) VALUES (?, ?, ?, ?, ?, ?, ?)'
         self.cursor.execute(sql, (producto.nombre,
         producto.descripcion,
         producto.stock,
         producto.precio,
         producto.idCategoria,
         producto.idProveedor,
-        Idproducto))
+        imagen_path))
+        self.db.commit()
+    
+    def ModificarProducto(self, producto: Producto, Idproducto, imagen_path=None):
+        # Si hay imagen nueva, actualizar con ella; si no, mantener la anterior
+        if imagen_path:
+            sql = 'UPDATE Producto SET Nombre = ?, Descripcion = ?, Stock = ?, Precio = ?, IdCategoria = ?, IdProveedor = ?, Imagen = ? WHERE IdProducto = ? '
+            self.cursor.execute(sql, (producto.nombre,
+            producto.descripcion,
+            producto.stock,
+            producto.precio,
+            producto.idCategoria,
+            producto.idProveedor,
+            imagen_path,
+            Idproducto))
+        else:
+            sql = 'UPDATE Producto SET Nombre = ?, Descripcion = ?, Stock = ?, Precio = ?, IdCategoria = ?, IdProveedor = ? WHERE IdProducto = ? '
+            self.cursor.execute(sql, (producto.nombre,
+            producto.descripcion,
+            producto.stock,
+            producto.precio,
+            producto.idCategoria,
+            producto.idProveedor,
+            Idproducto))
         self.db.commit()
 
     def ObtenerCategorias(self):
