@@ -51,13 +51,25 @@ class DashboardView:
             try:
                 pil_img = Image.open(f"imgs/{nombre}.png").resize((30, 30))
                 return CTkImage(light_image=pil_img, dark_image=pil_img, size=(28, 28))
-            except Exception:
+            except FileNotFoundError:
+                print(f"Error: No se encontró la imagen {nombre}.png")
+                return None
+            except Exception as e:
+                print(f"Error al cargar la imagen {nombre}.png: {e}")
                 return None
 
         menu_icon = cargar_icono("menu")
+        if not menu_icon:
+            messagebox.showerror("Error", "No se pudo cargar la imagen del menú.")
         historial_icon = cargar_icono("historial")
+        if not historial_icon:
+            messagebox.showerror("Error", "No se pudo cargar la imagen del historial.")
         reportes_icon = cargar_icono("reportes")
+        if not reportes_icon:
+            messagebox.showerror("Error", "No se pudo cargar la imagen del reporte.")
         producto_icon = cargar_icono("modificar")
+        if not reportes_icon:
+            messagebox.showerror("Error", "No se pudo cargar la imagen de los productos.")
         
         #botones de navegacion
         self.nav_button_menu = ctk.CTkButton(

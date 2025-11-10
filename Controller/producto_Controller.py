@@ -34,3 +34,6 @@ class ProductoController:
 
     def ListarProveedores(self):
         return self.model.ObtenerProveedores()
+    
+    def ObtenerId(self, Nombre):
+        return self.model.ObtenerId(Nombre)

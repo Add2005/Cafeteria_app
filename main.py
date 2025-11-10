@@ -1,8 +1,8 @@
-from Controller.login_controller import LoginController
+from View.loginView import LoginView
 
 def main():
-    ctrl = LoginController()
-    ctrl.mostrar()
+    LoginView()
 
 if __name__ == "__main__":
     main()
+ 

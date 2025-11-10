@@ -8,22 +8,22 @@ class VentaModel:
         self.cursor = self.db.cursor()
 
     def GuardarVenta(self, venta: Venta):
-        sql = 'INSERT INTO Venta (TotalVenta, FechaHora, Id_Cliente, IdEmpleado) VALUES (?,?,?,?)'
-        sql2 = 'SELECT SCOPE_IDENTITY AS IdVenta'
+        sql = '''INSERT INTO Venta (TotalVenta, FechaHora, IdCliente, IdEmpleado) 
+                OUTPUT INSERTED.IdVenta 
+                VALUES (?,?,?,?)'''
         self.cursor.execute(sql,(venta.TotalVenta, 
                                  venta.FechaHora, 
-                                 venta.Id_Cliente, 
-                                 venta.Id_Empleado))
-        self.cursor.execute(sql2)        
-        IdVenta = self.cursor.fetchone()  
+                                 venta.IdCliente, 
+                                 venta.IdEmpleado))
+        IdVenta = self.cursor.fetchone()[0]
         return IdVenta
     
     def ModificarVenta(self, venta: Venta, IdProducto):
-        sql = 'UPDATE Venta SET TotalVenta = ?, FechaHora = ?, Id_Cliente = ?, IdEmpleado = ? WHERE IdVenta = ? '
+        sql = 'UPDATE Venta SET TotalVenta = ?, FechaHora = ?, IdCliente = ?, IdEmpleado = ? WHERE IdVenta = ? '
         self.cursor.execute(sql, (venta.TotalVenta, 
                                   venta.FechaHora, 
-                                  venta.Id_Cliente, 
-                                  venta.Id_Empleado, 
+                                  venta.IdCliente, 
+                                  venta.IdEmpleado, 
                                   IdProducto))
         self.cursor.commit()
         

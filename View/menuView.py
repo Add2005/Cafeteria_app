@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from Controller.producto_Controller import ProductoController
 from PIL import Image
+from View.confirmarPagoView import WindowPago
 
 
 def crear_vista_menu(parent, colores):
@@ -8,17 +9,19 @@ def crear_vista_menu(parent, colores):
     parent: widget contenedor donde se colocara el frame
     colores: dict con claves 'principal', 'secundario', 'texto', 'tarjeta'
     """
-    # trayendo los datos a el form con el controller
-    control = ProductoController()
+    #Ventas
+    
+    # Productos
+    control_productos = ProductoController()
     # declarando listas para las categorias
     Cafes = list()
     BebidasFrias = list()
     Postres = list()
-    for ca in control.ListarCafes():
+    for ca in control_productos.ListarCafes():
         Cafes.append(ca)
-    for bebidas in control.ListarBebidasFrias():
+    for bebidas in control_productos.ListarBebidasFrias():
         BebidasFrias.append(bebidas)
-    for pst in control.ListarPostres():
+    for pst in control_productos.ListarPostres():
         Postres.append(pst)
 
     vista_menu = ctk.CTkFrame(parent, fg_color=colores.get('principal'))
@@ -175,102 +178,8 @@ def crear_vista_menu(parent, colores):
     )
     clean_btn.pack(fill="x", pady=(0,8))
 
-    # Funcionalidad top-level para confirmar pago (mantenida como en el pull)
-    def WindowPago():
-        # Crear la window emergent
-        window_pago = ctk.CTkToplevel(vista_menu)
-        window_pago.title("Confirmar Pago")
-        window_pago.geometry("600x800")
-        window_pago.lift()
-        window_pago.focus_force()
-        window_pago.grab_set()
-        window_pago.resizable(False, True)
-
-        # Encabezado
-        headerPagos = ctk.CTkLabel(
-            window_pago,
-            text="Payment Confirmacion\nRevieu your order and select payment method",
-            font=ctk.CTkFont(size=16, weight="bold"),
-            text_color=colores.get('texto'),
-            justify="center"
-        )
-        headerPagos.pack(pady=(20, 10))
-
-        # Marco de items
-        marco_items = ctk.CTkScrollableFrame(
-            window_pago,
-            fg_color=colores.get('tarjeta'),
-            label_text="Ordered Items"
-        )
-        marco_items.pack(fill="both", expand=True, padx=20, pady=10)
-
-        # Poblamos los items en el toplevel
-        if not order_items:
-            ctk.CTkLabel(marco_items, text="No hay items en la orden.", text_color=colores.get('texto')).pack(pady=20)
-        else:
-            for name, data in order_items.items():
-                ctk.CTkLabel(marco_items, text=f"{name} x{data['cantidad']}  -  ${data['precio']*data['cantidad']:.2f}", text_color=colores.get('texto')).pack(anchor='w', padx=10, pady=4)
-
-        # payment method
-        paymentFrame = ctk.CTkFrame(window_pago, fg_color=colores.get('tarjeta'), width= 100, height=100)
-        paymentFrame.pack(padx=20, pady=5)
-
-        metodo_pago = ctk.StringVar(value="Cash")
-        ctk.CTkRadioButton(paymentFrame, text="Cash 🏳️‍⚧️ ", variable=metodo_pago, value="Cash").pack(anchor="w", padx=10, pady=5)
-        ctk.CTkRadioButton(paymentFrame, text="Card 💳", variable=metodo_pago, value="Card").pack(anchor="w", padx=10, pady=5)
-
-        # Totales en toplevel
-        total_frame = ctk.CTkFrame(window_pago, fg_color=colores.get('tarjeta'), width= 120, height=100)
-        total_frame.pack(padx=20, pady=(20, 20))
-
-        ctk.CTkLabel(total_frame, text="Total a pagar:", font=ctk.CTkFont(size=14, weight="bold")).grid(row=0, column=0, sticky="w", pady=5)
-        lbl_total = ctk.CTkLabel(total_frame, text=f"${calculate_totals()[1]:.2f}", font=ctk.CTkFont(size=14))
-        lbl_total.grid(row=0, column=1, sticky="e", pady=5)
-
-        ctk.CTkLabel(total_frame, text="Total recibido:", font=ctk.CTkFont(size=14, weight="bold")).grid(row=1, column=0, sticky="w", pady=5)
-        entry_recibido = ctk.CTkEntry(total_frame, placeholder_text="Recibido", width=100)
-        entry_recibido.grid(row=1, column=1, sticky="e", pady=5)
-
-        ctk.CTkLabel(total_frame, text="Vuelto a dar:", font=ctk.CTkFont(size=14, weight="bold")).grid(row=2, column=0, sticky="w", pady=5)
-        lbl_vuelto = ctk.CTkLabel(total_frame, text="$0.00", font=ctk.CTkFont(size=14))
-        lbl_vuelto.grid(row=2, column=1, sticky="e", pady=5)
-
-        lbl_mainpago = ctk.CTkLabel(
-            window_pago,
-            text="¿Deseas confirmar el pago?",
-            font=ctk.CTkFont(size=16, weight="bold")
-        )
-        lbl_mainpago.pack(pady=20)
-
-        botones_pagos = ctk.CTkFrame(window_pago)
-        botones_pagos.pack(pady=10)
-
-        def confirmar_pago():
-            # Aquí integrar con Controller/Model para guardar la orden
-            print("Pago confirmado 🧼")
-            order_items.clear()
-            refresh_order_view()
-            window_pago.destroy()
-
-        btn_pagoConfirmar = ctk.CTkButton(
-            botones_pagos,
-            text="Sí, confirmar",
-            fg_color=colores.get('secundario'),
-            hover_color=colores.get('principal'),
-            text_color=colores.get('texto'),
-            command=confirmar_pago
-        )
-        btn_pagoConfirmar.pack(side="left", padx=10)
-
-        btn_pagoCancelar = ctk.CTkButton(
-            botones_pagos,
-            text="Cancelar",
-            fg_color="gray",
-            hover_color="white",
-            text_color="white",
-            command=window_pago.destroy
-        )
-        btn_pagoCancelar.pack(side="left", padx=10)
+    def CargarConfirmarPago():
+        WindowPago(vista_menu, colores, calculate_totals()[1], order_items)
 
     # Botón pagar (abre el top-level)
     pay_btn = ctk.CTkButton(
@@ -281,7 +190,7 @@ def crear_vista_menu(parent, colores):
         text_color=colores.get('texto'),
         height=40,
         font=ctk.CTkFont(size=14, weight="bold"),
-        command=WindowPago
+        command= CargarConfirmarPago
     )
     pay_btn.pack(fill="x")
 
