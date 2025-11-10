@@ -111,8 +111,9 @@ def WindowPago(vista_menu, colores, calculate_total, order_items):
     botones_pagos.pack(pady=10)
 
     def confirmar_pago():
-        #Guardar la orden
-        fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        #Recuperar fecha del sistema
+        fecha = datetime.now()
+        fecha_actual = fecha.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         #Cliente: Publico General
         IdCliente = 1
         IdEmpleado = usuario.sesion_actual

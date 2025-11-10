@@ -10,26 +10,25 @@ class VentaService:
     
     def __init__(self):
         self.db = Conexion()
-        self.cursor = self.db.cursor()       
+        #self.cursor = self.db.cursor()       
         self.venta = VentaModel()
         self.detventa = DetalleVentaModel()
     
     def AgregarVentaCompleta(self, venta: Venta, lista_Det: list[tuple]):
+        cursor = self.db.cursor()
         try:
-            self.cursor.execute("BEGIN TRANSACTION;")
-            idVenta = self.venta.GuardarVenta(venta)
+            idVenta = self.venta.GuardarVenta(cursor, venta)
             
             detVenta = [(idVenta, det[0], det[1]) for det in lista_Det]
-            print(detVenta)
+            print(f"VentaService DetalleVenta: {detVenta}")
             
-            self.detventa.AgregarDetVenta(detVenta)
+            self.detventa.AgregarDetVenta(cursor, detVenta)
             
-            self.cursor.commit()
+            cursor.commit()
             print(f"Venta {idVenta} agregada correctamente con sus detalles.")
         except Exception as ex:
-            self.cursor.rollback()
+            if cursor:
+                cursor.rollback()
             messagebox.showerror("Error", f"Error en la transacción\nCod_Error: {ex}")
-        finally:
-            self.cursor.close()
-            self.db.close()
+
 

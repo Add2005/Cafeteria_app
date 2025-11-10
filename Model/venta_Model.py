@@ -7,15 +7,15 @@ class VentaModel:
         self.db = Conexion() 
         self.cursor = self.db.cursor()
 
-    def GuardarVenta(self, venta: Venta):
+    def GuardarVenta(self,cursor, venta: Venta):
         sql = '''INSERT INTO Venta (TotalVenta, FechaHora, IdCliente, IdEmpleado) 
                 OUTPUT INSERTED.IdVenta 
                 VALUES (?,?,?,?)'''
-        self.cursor.execute(sql,(venta.TotalVenta, 
+        cursor.execute(sql,(venta.TotalVenta, 
                                  venta.FechaHora, 
                                  venta.IdCliente, 
                                  venta.IdEmpleado))
-        IdVenta = self.cursor.fetchone()[0]
+        IdVenta = cursor.fetchone()[0]
         return IdVenta
     
     def ModificarVenta(self, venta: Venta, IdProducto):
