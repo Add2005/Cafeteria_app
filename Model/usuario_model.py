@@ -12,21 +12,22 @@ class usuarioModel:
         self.cursor.execute(sql, (nombre_usuario, contrasena))
         row = self.cursor.fetchone()
         if row:
-            return usuario(row.IdUsuario, row.NombreUsuario, row.Contrasena, row.IdRol)
+            return True
         else:
-            return None
-        
-    def get_user_by_rol(self, rol: int):
-        sql = 'SELECT * FROM Usuarios WHERE IdRol = ?'
-        self.cursor.execute(sql, (rol,))
-        rows = self.cursor.fetchall()
-        usuarios = []
-        for row in rows:
-            usuarios.append(usuario(row.IdUsuario, row.NombreUsuario, row.Contrasena, row.IdRol))
-        return usuarios
-    
+            return False
+
+    def ObtenerUsuario(self, nombre):
+        sql = 'SELECT * FROM Usuarios WHERE NombreUsuario = ?'
+        self.cursor.execute(sql, (nombre,))
+        row = self.cursor.fetchone()
+        return usuario(row.IdUsuario, row.NombreUsuario, row.Contrasena, row.IdRol)
+
     def crear_usuario(self, usuario: usuario):
         sql = 'INSERT INTO Usuario (NombreUsuario, Contrasena, IdRol) VALUES (?, ?, ?)'
         self.cursor.execute(sql, (usuario.nombre_usuario, usuario.contrasena, usuario.rol))
         self.db.commit()
         
+    def BuscarEmpleado(self, Nombre):
+        sql = 'SELECT IdEmpleado FROM Usuarios WHERE NombreUsuario = ?'
+        self.cursor.execute(sql,(Nombre,))
+        return self.cursor.fetchone()

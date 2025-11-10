@@ -62,3 +62,8 @@ class ProductoModel:
         sql = 'SELECT IdProveedor, Nombre FROM Proveedor'
         self.cursor.execute(sql)
         return self.cursor.fetchall()
+    
+    def ObtenerId(self, Nombre):
+        sql = 'SELECT IdProducto FROM Producto WHERE Nombre = ?'
+        self.cursor.execute(sql, (Nombre,))
+        return self.cursor.fetchone()

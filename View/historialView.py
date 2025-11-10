@@ -7,19 +7,22 @@ def crear_vista_historial(parent_frame, paleta):
     
     #llamando el controlador
     controller = VentaController()
-    historial = controller.HistorialVenta()
-
+    global historialEstatico
     #cargar numero de items desplegados
-    no_items = len(historial)
+    no_items = 0
 
-# esto si esta potente!!!, python deja poner un valor por defecto en el parametro por si no le especificas uno 🤯
-# esto me permitio que la funcion fuera aun mas reutilizable 
-    def CargarHistorial(historial = historial):
+    def CargarHistorial(historialActualizado = None):
+        global historialEstatico
+        #cargar en el estado global
+        if historialActualizado is None:
+            historialActualizado = controller.HistorialVenta()
+        historialEstatico = historialActualizado
+        
         for item in tree.get_children():
             tree.delete(item)
-        for NoVenta, Fecha, NombreEmpl, NombreCl, NombrePro, PrecioUni, CantidadOrd, TotalVenta in historial:
+        for NoVenta, Fecha, NombreEmpl, NombreCl, NombrePro, PrecioUni, CantidadOrd, TotalVenta in historialActualizado:
             tree.insert('', 'end', values=(NoVenta, Fecha, NombreEmpl, NombreCl, NombrePro, PrecioUni, CantidadOrd, TotalVenta))
-        info_label.configure(text=f"Mostrando: {len(historial)} items")
+        info_label.configure(text=f"Mostrando: {len(historialActualizado)} items")
         
     def FiltrarHistorial(variable):
         if variable == "Por fecha(mas reciente)":
@@ -35,7 +38,7 @@ def crear_vista_historial(parent_frame, paleta):
         query = EtyBuscar.get().lower()
         for item in tree.get_children():
             tree.delete(item)
-        for row in historial:
+        for row in historialEstatico:
             # comparamos todos los campos como cadena en minúsculas
             if (query in str(row[0]).lower() or
                 query in str(row[1]).lower() or
@@ -47,9 +50,6 @@ def crear_vista_historial(parent_frame, paleta):
                 query in str(row[7]).lower()):
                 # insertar sólo una vez
                 tree.insert('', 'end', values=(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
-    
-        
-    
 
     # Definición de Colores 
     COLOR_PRIMARY = paleta['principal']

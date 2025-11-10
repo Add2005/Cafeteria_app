@@ -7,9 +7,9 @@ class DetalleVentaModel:
         self.db = Conexion()
         self.cursor = self.db.cursor()
 
-    def AgregarDetVenta(self, lista_detventa: list[tuple]): 
+    def AgregarDetVenta(self, cursor, lista_detventa: list[tuple]): 
         sql = 'INSERT INTO DetalleVenta (IdVenta, IdProducto, Cantidad) VALUES (?,?,?)'
-        self.cursor.executemany(sql, lista_detventa)
+        cursor.executemany(sql, lista_detventa)
     
     def EliminarDetVenta(self):
         pass
