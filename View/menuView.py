@@ -227,7 +227,7 @@ def crear_vista_menu(parent, colores):
             return
 
         # Crear tarjeta por cada producto
-        for idxy, (nombre, descripcion, precio) in enumerate(items):
+        for idxy, (nombre, descripcion, precio, Imagen) in enumerate(items):
             tarjeta = ctk.CTkFrame(
                 productos_grid,
                 fg_color=colores.get('tarjeta'),
@@ -243,14 +243,16 @@ def crear_vista_menu(parent, colores):
                 corner_radius=10
             )
             img_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
-            img_frame.grid_propagate(True)
+            img_frame.grid_propagate(False)
 
             try:
-                ImgProducto = "imgs/reportes.png"
-                prod_img = Image.open(ImgProducto).resize((30, 30))
-                ImgProducto = ctk.CTkImage(light_image=prod_img, dark_image=prod_img, size=(80, 80))
+
+                ImgProducto = Imagen
+                prod_img = Image.open(ImgProducto).resize((100 , 100))
+                ImgProducto = ctk.CTkImage(light_image=prod_img, dark_image=prod_img, size=(100, 100))
             except Exception:
-                ImgProducto = None
+                ImgProducto = ctk.CTkImage(light_image=Image.open("productos/no_image.png").resize((100 , 100)),
+                                            dark_image=Image.open("productos/no_image.png").resize((100 , 100)), size=(100, 100))
 
             ctk.CTkLabel(
                 img_frame,

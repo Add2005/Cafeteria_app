@@ -8,17 +8,17 @@ class ProductoModel:
         self.cursor = self.db.cursor()
 
     def CargarCafes(self):
-        sql = 'SELECT Nombre, Descripcion, Precio FROM Producto WHERE IdCategoria = 1'
+        sql = 'SELECT Nombre, Descripcion, Precio, Imagen FROM Producto WHERE IdCategoria = 1'
         self.cursor.execute(sql)
         return self.cursor.fetchall()
     
     def CargarPostres(self):
-        sql = 'SELECT Nombre, Descripcion, Precio FROM Producto WHERE IdCategoria = 2'
+        sql = 'SELECT Nombre, Descripcion, Precio, Imagen FROM Producto WHERE IdCategoria = 2'
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
     def CargarBebidasFrias(self):
-        sql = 'SELECT Nombre, Descripcion, Precio FROM Producto WHERE IdCategoria = 3'
+        sql = 'SELECT Nombre, Descripcion, Precio, Imagen FROM Producto WHERE IdCategoria = 3'
         self.cursor.execute(sql)
         return self.cursor.fetchall()    
     
