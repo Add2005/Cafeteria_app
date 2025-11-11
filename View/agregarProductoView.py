@@ -197,6 +197,12 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
 
             messagebox.showinfo("Éxito", "Producto agregado exitosamente.")
             
+              # limpiar formulario
+            etyNombre.delete(0, 'end')
+            etyDescripcion.delete("1.0", "end")
+            etyPrecio.delete(0, 'end')
+            etyStock.delete(0, 'end')
+            
             # Intentar refrescar la vista del menú principal si está disponible
             try:
                 root = tab_agregar.winfo_toplevel()
@@ -209,13 +215,7 @@ def crear_vista_agregar_producto(tab_agregar, paleta, controller, categorias, pr
                     print(f"Advertencia: no se pudo refrescar el menú: {e}")
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo modificar el producto: {e}")
-
-
-            # limpiar formulario
-            etyNombre.delete(0, 'end')
-            etyDescripcion.delete("1.0", "end")
-            etyPrecio.delete(0, 'end')
-            etyStock.delete(0, 'end')
+        
             if categorias_nombres:
                 etyCategoria.set(categorias_nombres[0])
             if proveedores_nombres:

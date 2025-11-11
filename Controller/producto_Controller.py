@@ -21,7 +21,7 @@ class ProductoController:
     def ListarBebidasFrias(self):
         return self.model.CargarBebidasFrias()
         
-    def AgregarProducto(self, nombre, desc, stock, precio, idCat, idPro, imagen_path):
+    def AgregarProducto(self, nombre, desc, precio, stock, idCat, idPro, imagen_path):
         p = Producto(None, nombre, desc, stock, precio, idCat, idPro, imagen_path)
         self.model.GuardarProducto(p, imagen_path)
         return True
@@ -50,22 +50,28 @@ class ProductoController:
     def GuardarImagen(self, archivo_path):
         if not archivo_path or not os.path.exists(archivo_path):
             raise ValueError("El archivo de imagen no existe")
+        
         try:
+            # Obtener nombre del archivo
             nombre_archivo = os.path.basename(archivo_path)
-            nombre_base, extension = os.path.splitext(nombre_archivo)
-            # Eliminar cualquier imagen anterior que empiece con el mismo nombre base
-            for file in self.productos_dir.iterdir():
-                if file.is_file():
-                    f_base, f_ext = os.path.splitext(file.name)
-                    if (f_base == nombre_base or f_base.startswith(nombre_base + "_")) and f_ext == extension:
-                        try:
-                            file.unlink()
-                        except Exception:
-                            pass
-            # Copiar la nueva imagen con el nombre original
+            
+            # Ruta destino
             ruta_destino = self.productos_dir / nombre_archivo
+            
+            # Si el archivo ya existe, agregar timestamp para evitar conflictos
+            if ruta_destino.exists():
+                nombre_base, extension = os.path.splitext(nombre_archivo)
+                from datetime import datetime
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                nombre_archivo = f"{nombre_base}_{timestamp}{extension}"
+                ruta_destino = self.productos_dir / nombre_archivo
+            
+            # Copiar archivo
             shutil.copy2(archivo_path, ruta_destino)
+            
+            # Retornar ruta relativa para guardar en BD
             ruta_relativa = str(ruta_destino).replace("\\", "/")
             return ruta_relativa
+            
         except Exception as e:
             raise Exception(f"Error al guardar la imagen: {e}")

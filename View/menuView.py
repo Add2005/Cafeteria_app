@@ -253,9 +253,8 @@ def crear_vista_menu(parent, colores):
                 prod_img = Image.open(ImgProducto).resize((100 , 100))
                 ImgProducto = ctk.CTkImage(light_image=prod_img, dark_image=prod_img, size=(100, 100))
             except Exception:
-                ImgProducto = ctk.CTkImage(light_image=Image.open("productos/no_image.png").resize((100 , 100)),
-                                            dark_image=Image.open("productos/no_image.png").resize((100 , 100)), size=(100, 100))
-
+                ImageProducto = None
+                
             ctk.CTkLabel(
                 img_frame,
                 text="",
